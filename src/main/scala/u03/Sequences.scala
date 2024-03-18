@@ -25,11 +25,19 @@ object Sequences: // Essentially, generic linkedlists
       case Nil()                 => Nil()
 
     // Lab 03
-    def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] = ???
-
-    def take[A](l: Sequence[A])(n: Int): Sequence[A] = ???
+    def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] = (first, second) match
+      case (Cons(h, t), Cons(h2, t2)) => Cons((h, h2), zip(t, t2))
+      case _ => Nil()
     
-    def concat[A](l1: Sequence[A], l2: Sequence[A]): Sequence[A] = ???
+
+    def take[A](l: Sequence[A])(n: Int): Sequence[A] = l match
+      case Cons(h, t) if n > 0 =>  Cons(h, take(t)(n-1))
+      case _ => Nil()
+    
+    def concat[A](l1: Sequence[A], l2: Sequence[A]): Sequence[A] = l1 match
+      case Cons(h, t) => Cons(h, concat(t, l2))
+      case _ => l2
+
     def flatMap[A, B](l: Sequence[A])(mapper: A => Sequence[B]): Sequence[B] = ???
 
     def min(l: Sequence[Int]): Optional[Int] = ???
@@ -37,7 +45,7 @@ object Sequences: // Essentially, generic linkedlists
 @main def trySequences =
   import Sequences.* 
   val l = Sequence.Cons(10, Sequence.Cons(20, Sequence.Cons(30, Sequence.Nil())))
-  println(Sequence.sum(l)) // 30
+  println(Sequence.sum(l)) // 60
 
   import Sequence.*
 
