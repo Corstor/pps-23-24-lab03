@@ -2,6 +2,8 @@ package u03
 
 import u02.AnonymousFunctions.l
 import u03.Optionals.Optional
+import u03.Optionals.Optional.orElse
+import scala.collection.View.Empty
 
 object Sequences: // Essentially, generic linkedlists
   
@@ -15,14 +17,13 @@ object Sequences: // Essentially, generic linkedlists
       case Cons(h, t) => h + sum(t)
       case _          => 0
 
-    def map[A, B](l: Sequence[A])(mapper: A => B): Sequence[B] = l match
-      case Cons(h, t) => flatMap(l)(v => Cons(mapper(v), Nil()))
-      case _ => Nil()
+    def map[A, B](l: Sequence[A])(mapper: A => B): Sequence[B] = 
+      flatMap(l)(v => Cons(mapper(v), Nil()))
 
-    def filter[A](l1: Sequence[A])(pred: A => Boolean): Sequence[A] = l1 match
-      case Cons(h, t) if pred(h) => Cons(h, filter(t)(pred))
-      case Cons(_, t)            => filter(t)(pred)
-      case Nil()                 => Nil()
+    def filter[A](l1: Sequence[A])(pred: A => Boolean): Sequence[A] =
+      flatMap(l1)(v => pred(v) match
+        case true => Cons(v, Nil())
+        case _ => Nil())
 
     // Lab 03
     def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] = (first, second) match
@@ -42,8 +43,17 @@ object Sequences: // Essentially, generic linkedlists
       case Cons(h, t) => concat(mapper(h), flatMap(t)(mapper))
       case _ => Nil()
 
-    def min(l: Sequence[Int]): Optional[Int] = ???
-    
+    def min(l: Sequence[Int]): Optional[Int] = 
+      @annotation.tailrec
+      def minTail(l: Sequence[Int])(min: Int): Int =
+        l match
+          case Cons(h, t) if h < min => minTail(t)(h)
+          case Cons(_, t) => minTail(t)(min)
+          case _ => min
+      l match
+        case Cons(h, t) => Optional.Just(minTail(l)(h))
+        case _ => Optional.Empty()
+        
 @main def trySequences =
   import Sequences.* 
   val l = Sequence.Cons(10, Sequence.Cons(20, Sequence.Cons(30, Sequence.Nil())))

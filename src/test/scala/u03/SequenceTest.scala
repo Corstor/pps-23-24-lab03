@@ -52,5 +52,9 @@ class SequenceTest:
     assertEquals(Nil(), flatMap(Nil())(v => Nil()))
     assertEquals(Nil(), flatMap(Nil())(v => Cons(v, Nil())))
 
-  @Test def testMin(): Unit = ???
+  @Test def testMin() = 
+    import Optionals.*
+    import Optional.*
+    assertEquals(Just(10), min(l))
+    assertEquals(Empty(), min(Nil()))
     
