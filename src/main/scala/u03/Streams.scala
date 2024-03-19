@@ -1,5 +1,7 @@
 package u03
 
+import u03.Streams.Stream.getPellStream
+
 object Streams extends App :
 
   import Sequences.*
@@ -46,6 +48,15 @@ object Streams extends App :
     def fill[A](n: Int)(elem: A): Stream[A] = 
       take(iterate(elem)(x => x))(n)
 
+    def getPellStream(): Stream[Int] =
+      def _getPellStream(v1: Int)(v2:Int): Stream[Int] = v1 match
+        case 0 => cons(v1, cons(v2, _getPellStream(v2)(v1)))
+        case _ => 
+          val newPellNumber = 2 * v1 + v2
+          cons(newPellNumber, _getPellStream(newPellNumber)(v1))
+
+      _getPellStream(0)(1)
+
   end Stream
 
 @main def tryStreams =
@@ -59,3 +70,5 @@ object Streams extends App :
 
   lazy val corec: Stream[Int] = Stream.cons(1, corec) // {1,1,1,..}
   println(Stream.toList(Stream.take(corec)(10))) // [1,1,..,1]
+
+  println(Stream.toList(Stream.take(Stream.getPellStream())(10)))
