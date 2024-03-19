@@ -1,6 +1,5 @@
 package u03
 
-import Optionals.Optional.*
 import org.junit.*
 import org.junit.Assert.*
 
@@ -58,3 +57,8 @@ class SequenceTest:
     assertEquals(Just(10), min(l))
     assertEquals(Empty(), min(Nil()))
     
+  @Test def testGetCourses() =
+    import Persons.* 
+    import Person.*
+    val persons = Cons(Teacher("Andrea", "pcd"), Cons(Student("Corrado", 2023), Cons(Teacher("Mirko", "pps"), Cons(Teacher("Prova", "pps"), Nil()))))
+    assertEquals(Cons("pcd", Cons("pps", Cons("pps", Nil()))), getCourses(persons))

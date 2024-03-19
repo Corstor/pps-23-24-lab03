@@ -4,6 +4,7 @@ import u02.AnonymousFunctions.l
 import u03.Optionals.Optional
 import u03.Optionals.Optional.orElse
 import scala.collection.View.Empty
+import u03.Persons.Person
 
 object Sequences: // Essentially, generic linkedlists
   
@@ -53,6 +54,13 @@ object Sequences: // Essentially, generic linkedlists
       l match
         case Cons(h, t) => Optional.Just(minTail(l)(h))
         case _ => Optional.Empty()
+      
+    def getCourses(l: Sequence[Person]): Sequence[String] = 
+      flatMap(l)(p => p match
+        case Person.Teacher(_, c) => Cons(c, Nil())
+        case _ => Nil()
+      )
+    
         
 @main def trySequences =
   import Sequences.* 
