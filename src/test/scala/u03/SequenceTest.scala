@@ -62,3 +62,7 @@ class SequenceTest:
     import Person.*
     val persons = Cons(Teacher("Andrea", "pcd"), Cons(Student("Corrado", 2023), Cons(Teacher("Mirko", "pps"), Cons(Teacher("Prova", "pps"), Nil()))))
     assertEquals(Cons("pcd", Cons("pps", Cons("pps", Nil()))), getCourses(persons))
+
+  @Test def testFoldLeft() =
+    assertEquals(-60, foldLeft(l)(0)(_ - _))
+    assertEquals(0, foldLeft(Nil())(0)(_+_))

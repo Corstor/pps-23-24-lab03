@@ -61,6 +61,11 @@ object Sequences: // Essentially, generic linkedlists
         case _ => Nil()
       )
     
+    def foldLeft[A](l: Sequence[A])(v: A)(f: (x: A, y:A) => A): A = l match
+      case Cons(h, t) => foldLeft(t)(f(v, h))(f)
+      case _ => v
+    
+    
         
 @main def trySequences =
   import Sequences.* 
