@@ -8,7 +8,6 @@ object Sequences:
 
   object Sequence:
     import u03.Optionals.*
-    import Optional.*
     import u03.Persons.*
 
     extension (l: Sequence[Int])

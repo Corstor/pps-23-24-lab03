@@ -1,8 +1,6 @@
 package u03
 
-import u03.Streams.Stream.getPellStream
-
-object Streams extends App :
+object Streams :
 
   import Sequences.*
 
@@ -56,8 +54,6 @@ object Streams extends App :
           cons(newPellNumber, _getPellStream(newPellNumber)(v1))
 
       _getPellStream(0)(1)
-
-  end Stream
 
 @main def tryStreams =
   import Streams.* 

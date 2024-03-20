@@ -1,9 +1,6 @@
 package u03
 
-import u02.AnonymousFunctions.l
 import u03.Optionals.Optional
-import u03.Optionals.Optional.orElse
-import scala.collection.View.Empty
 import u03.Persons.Person
 
 object Sequences: // Essentially, generic linkedlists
