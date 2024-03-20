@@ -1,9 +1,16 @@
 package task
 
 import u03.Optionals.Optional
-import u03.Persons.Person
 
 //Task 1, svolto da solo
+
+object Persons:
+    enum Person:
+        case Student(name: String, year: Int)
+        case Teacher(name: String, course: String)
+
+import Persons.* 
+import Person.*
 
 object Sequences:
   
@@ -56,7 +63,7 @@ object Sequences:
     //Task 2, svolto da solo
     def getCourses(l: Sequence[Person]): Sequence[String] = 
       flatMap(l)(p => p match
-        case Person.Teacher(_, c) => Cons(c, Nil())
+        case Teacher(_, c) => Cons(c, Nil())
         case _ => Nil()
       )
     
@@ -64,26 +71,25 @@ object Sequences:
       case Cons(h, t) => foldLeft(t)(f(v, h))(f)
       case _ => v
 
-
 //Task 2 extended method for sequences, svolto da solo
 object SequencesExtended:
   
-  enum Sequence[E]:
-    case Cons(head: E, tail: Sequence[E])
+  enum SequenceExtended[E]:
+    case Cons(head: E, tail: SequenceExtended[E])
     case Nil()
 
-  object Sequence:
+  object SequenceExtended:
     import u03.Optionals.*
     import u03.Persons.*
 
-    extension (l: Sequence[Int])
+    extension (l: SequenceExtended[Int])
       def sum: Int = l match
         case Cons(h, t) => h + t.sum
         case _          => 0
 
       def min: Optional[Int] = 
         @annotation.tailrec
-        def minTail(l: Sequence[Int])(min: Int): Int =
+        def minTail(l: SequenceExtended[Int])(min: Int): Int =
           l match
             case Cons(h, t) if h < min => minTail(t)(h)
             case Cons(_, t) => minTail(t)(min)
@@ -92,37 +98,37 @@ object SequencesExtended:
           case Cons(h, t) => Optional.Just(minTail(l)(h))
           case _ => Optional.Empty()
     
-    extension (l: Sequence[Person])
-      def getCourses(): Sequence[String] = 
+    extension (l: SequenceExtended[Person])
+      def getCourses(): SequenceExtended[String] = 
         l.flatMap(p => p match
           case Person.Teacher(_, c) => Cons(c, Nil())
           case _ => Nil()
         )
 
-    extension [A](l: Sequence[A])
+    extension [A](l: SequenceExtended[A])
 
-      def map[B](mapper: A => B): Sequence[B] = 
+      def map[B](mapper: A => B): SequenceExtended[B] = 
         flatMap(v => Cons(mapper(v), Nil()))
 
-      def filter(pred: A => Boolean): Sequence[A] =
+      def filter(pred: A => Boolean): SequenceExtended[A] =
         flatMap(v => pred(v) match
           case true => Cons(v, Nil())
           case _ => Nil())
 
-      def zip[B](second: Sequence[B]): Sequence[(A, B)] = (l, second) match
+      def zip[B](second: SequenceExtended[B]): SequenceExtended[(A, B)] = (l, second) match
         case (Cons(h, t), Cons(h2, t2)) => Cons((h, h2), t.zip(t2))
         case _ => Nil()
       
 
-      def take(n: Int): Sequence[A] = l match
+      def take(n: Int): SequenceExtended[A] = l match
         case Cons(h, t) if n > 0 =>  Cons(h, t.take(n-1))
         case _ => Nil()
       
-      def concat(l2: Sequence[A]): Sequence[A] = l match
+      def concat(l2: SequenceExtended[A]): SequenceExtended[A] = l match
         case Cons(h, t) => Cons(h, t.concat(l2))
         case _ => l2
 
-      def flatMap[B](mapper: A => Sequence[B]): Sequence[B] = l match
+      def flatMap[B](mapper: A => SequenceExtended[B]): SequenceExtended[B] = l match
         case Cons(h, t) => mapper(h).concat(t.flatMap(mapper))
         case _ => Nil()
       
@@ -130,9 +136,8 @@ object SequencesExtended:
         case Cons(h, t) => t.foldLeft(f(v, h))(f)
         case _ => v
 
-    def of[A](n: Int, a: A): Sequence[A] =
+    def of[A](n: Int, a: A): SequenceExtended[A] =
       if (n == 0) then Nil[A]() else Cons(a, of(n - 1, a))
-
 
 
 object Streams :
